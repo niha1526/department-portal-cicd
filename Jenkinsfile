@@ -21,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('Push Image') {
+        stage('Push Image to Docker Hub') {
     steps {
         script {
             docker.withRegistry(
