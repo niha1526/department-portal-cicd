@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'niharikarao15/department-portal'
-        K8S_DEPLOYMENT = 'department-portal'
-        K8S_CONTAINER = 'department-portal'
-        K8S_NAMESPACE = 'default'
+        DOCKER_EXE = 'C:\\Users\\Niharika\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
+        KUBECTL_EXE = 'C:\\Users\\Niharika\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\kubectl.exe'
+        KUBECONFIG = 'C:\\Users\\Niharika\\.kube\\config'
     }
 
     stages {
@@ -17,39 +17,30 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:${BUILD_NUMBER}")
-                }
+                bat '"%DOCKER_EXE%" build -t "%DOCKER_IMAGE%:%BUILD_NUMBER%" .'
             }
         }
 
         stage('Push Image to Docker Hub') {
             steps {
-                script {
-                    docker.withRegistry(
-                        'https://index.docker.io/v1/',
-                        'dockerhub-credentials'
-                    ) {
-                        docker.image("${DOCKER_IMAGE}:${BUILD_NUMBER}").push()
-                        docker.image("${DOCKER_IMAGE}:${BUILD_NUMBER}").push('latest')
-                    }
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_TOKEN'
+                )]) {
+                    bat '''
+                        "%DOCKER_EXE%" login -u "%DOCKER_USER%" --password-stdin < nul
+                    '''
                 }
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([file(
-                    credentialsId: 'kubeconfig',
-                    variable: 'KUBECONFIG_FILE'
-                )]) {
-                    withEnv(["KUBECONFIG=${KUBECONFIG_FILE}"]) {
-                        bat '''
-                            kubectl set image deployment/%K8S_DEPLOYMENT% %K8S_CONTAINER%=%DOCKER_IMAGE%:%BUILD_NUMBER% -n %K8S_NAMESPACE%
-                            kubectl rollout status deployment/%K8S_DEPLOYMENT% -n %K8S_NAMESPACE% --timeout=180s
-                        '''
-                    }
-                }
+                bat '''
+                    "%KUBECTL_EXE%" set image deployment/department-portal department-portal=%DOCKER_IMAGE%:%BUILD_NUMBER% -n default
+                    "%KUBECTL_EXE%" rollout status deployment/department-portal -n default --timeout=180s
+                '''
             }
         }
     }
@@ -59,7 +50,7 @@ pipeline {
             echo 'CI/CD pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Check the stage logs for details.'
+            echo 'Pipeline failed. Review the console output.'
         }
     }
 }
