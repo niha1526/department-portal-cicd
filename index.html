@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Science Department Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #243047;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #12376a;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        nav {
+            background: #0b2447;
+            padding: 12px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 14px;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 0 18px;
+        }
+
+        section {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px #dce3ed;
+        }
+
+        h2 {
+            color: #12376a;
+            margin-top: 0;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: #edf4ff;
+            border-left: 4px solid #2870c7;
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        footer {
+            background: #0b2447;
+            color: white;
+            text-align: center;
+            padding: 18px;
+        }
+
+        @media (max-width: 600px) {
+            nav a {
+                display: inline-block;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Computer Science and Engineering</h1>
+        <p>College Department Information Portal</p>
+    </header>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#faculty">Faculty</a>
+        <a href="#programs">Programs</a>
+        <a href="#labs">Laboratories</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <main>
+        <section id="about">
+            <h2>About the Department</h2>
+            <p>
+                The Department of Computer Science and Engineering focuses on
+                programming, software development, artificial intelligence,
+                cybersecurity, cloud computing, and emerging technologies.
+                Students develop technical knowledge through coursework,
+                laboratory practice, and projects.
+            </p>
+        </section>
+
+        <section id="faculty">
+            <h2>Faculty Information</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Head of Department</h3>
+                    <p>Department administration and academic leadership.</p>
+                </div>
+                <div class="card">
+                    <h3>Faculty Members</h3>
+                    <p>Teaching, research, mentoring, and student guidance.</p>
+                </div>
+                <div class="card">
+                    <h3>Research Faculty</h3>
+                    <p>Research projects and emerging technology initiatives.</p>
+                </div>
+            </div>
+            <p><em>Replace these descriptions with official faculty names and details if required.</em></p>
+        </section>
+
+        <section id="programs">
+            <h2>Academic Programs</h2>
+            <ul>
+                <li>Undergraduate Computer Science and Engineering</li>
+                <li>Integrated and postgraduate computing programs</li>
+                <li>Artificial Intelligence and Machine Learning</li>
+                <li>Cybersecurity, data science, and software engineering</li>
+            </ul>
+        </section>
+
+        <section id="labs">
+            <h2>Laboratories and Facilities</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Programming Lab</h3>
+                    <p>Programming practice and software development.</p>
+                </div>
+                <div class="card">
+                    <h3>AI and Data Lab</h3>
+                    <p>Machine learning, data analytics, and intelligent systems.</p>
+                </div>
+                <div class="card">
+                    <h3>Networks and Systems Lab</h3>
+                    <p>Computer networks, operating systems, and security.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Information</h2>
+            <p><strong>Department:</strong> Computer Science and Engineering</p>
+            <p><strong>Email:</strong> department@example.edu</p>
+            <p><strong>Office:</strong> Department Administration Office</p>
+            <p><em>Replace placeholder contact details with official information if required.</em></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 College Department Information Portal</p>
+    </footer>
+</body>
+</html>
