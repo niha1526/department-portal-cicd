@@ -21,50 +21,52 @@ pipeline {
             }
         }
 
-       stage('Push Image to Docker Hub') {
-    steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'dockerhub-credentials',
-            usernameVariable: 'DOCKER_USER',
-            passwordVariable: 'DOCKER_TOKEN'
-        )]) {
-            bat '''
-                @echo off
-                echo %DOCKER_TOKEN% | "%DOCKER_EXE%" login -u "%DOCKER_USER%" --password-stdin
-                if errorlevel 1 exit /b 1
+        stage('Push Image to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_TOKEN'
+                )]) {
+                    bat '''
+                        @echo off
+                        echo %DOCKER_TOKEN% | "%DOCKER_EXE%" login -u "%DOCKER_USER%" --password-stdin
+                        if errorlevel 1 exit /b 1
 
-                "%DOCKER_EXE%" push "%DOCKER_IMAGE%:%BUILD_NUMBER%"
-                if errorlevel 1 exit /b 1
+                        "%DOCKER_EXE%" push "%DOCKER_IMAGE%:%BUILD_NUMBER%"
+                        if errorlevel 1 exit /b 1
 
-                "%DOCKER_EXE%" tag "%DOCKER_IMAGE%:%BUILD_NUMBER%" "%DOCKER_IMAGE%:latest"
-                if errorlevel 1 exit /b 1
+                        "%DOCKER_EXE%" tag "%DOCKER_IMAGE%:%BUILD_NUMBER%" "%DOCKER_IMAGE%:latest"
+                        if errorlevel 1 exit /b 1
 
-                "%DOCKER_EXE%" push "%DOCKER_IMAGE%:latest"
-                if errorlevel 1 exit /b 1
-            '''
+                        "%DOCKER_EXE%" push "%DOCKER_IMAGE%:latest"
+                        if errorlevel 1 exit /b 1
+                    '''
+                }
+            }
         }
-    }
-}
 
         stage('Deploy to Kubernetes') {
-    steps {
-        bat '''
-            "%KUBECTL_EXE%" set image deployment/department-portal department-portal=%DOCKER_IMAGE%:%BUILD_NUMBER% -n default
-            if errorlevel 1 exit /b 1
+            steps {
+                bat '''
+                    "%KUBECTL_EXE%" set image deployment/department-portal department-portal=%DOCKER_IMAGE%:%BUILD_NUMBER% -n default
+                    if errorlevel 1 exit /b 1
 
-            "%KUBECTL_EXE%" rollout status deployment/department-portal -n default --timeout=180s
-            if errorlevel 1 exit /b 1
+                    "%KUBECTL_EXE%" rollout status deployment/department-portal -n default --timeout=180s
+                    if errorlevel 1 exit /b 1
 
-            "%KUBECTL_EXE%" get deployment department-portal -n default
-        '''
+                    "%KUBECTL_EXE%" get deployment department-portal -n default
+                '''
+            }
+        }
     }
-}
+
     post {
         success {
             echo 'CI/CD pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed. Review the console output.'
+            echo 'Pipeline failed. Review the Console Output.'
         }
     }
 }
