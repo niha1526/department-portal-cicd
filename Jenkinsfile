@@ -21,19 +21,19 @@ pipeline {
             }
         }
 
-        stage('Push Image to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-credentials',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_TOKEN'
-                )]) {
-                    bat '''
-                        "%DOCKER_EXE%" login -u "%DOCKER_USER%" --password-stdin < nul
-                    '''
-                }
+        stage('Push Image') {
+    steps {
+        script {
+            docker.withRegistry(
+                'https://index.docker.io/v1/',
+                'dockerhub-credentials'
+            ) {
+                docker.image("${DOCKER_IMAGE}:${BUILD_NUMBER}").push()
+                docker.image("${DOCKER_IMAGE}:${BUILD_NUMBER}").push('latest')
             }
         }
+    }
+}
 
         stage('Deploy to Kubernetes') {
             steps {
