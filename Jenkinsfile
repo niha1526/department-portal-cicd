@@ -30,7 +30,7 @@ pipeline {
                 )]) {
                     bat '''
                         @echo off
-                        echo %DOCKER_TOKEN% | "%DOCKER_EXE%" login -u "%DOCKER_USER%" --password-stdin
+                        powershell -NoProfile -ExecutionPolicy Bypass -Command "$env:DOCKER_TOKEN | & $env:DOCKER_EXE login --username $env:DOCKER_USER --password-stdin"
                         if errorlevel 1 exit /b 1
 
                         "%DOCKER_EXE%" push "%DOCKER_IMAGE%:%BUILD_NUMBER%"
